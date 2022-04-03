@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if query %}
+<h2> Search result for {{query_str }}</h2>
+{% for product in query %}
+<div class="row pt-3">
+  <div class="col-2" onclick="window.location='{% url 'detail' product.id %}';" style="cursor: pointer;">
+    <img src="{{ product.icon.url }}" class="img-fluid" />
+  </div>
+  <div class="col-6" onclick="window.location='{% url 'detail' product.id %}';" style="cursor: pointer;">
+    <h1>{{ product.title }}</h1>
+    <!-- <p>{{ product.summary }}</p> -->
+  </div>
+  <div class="col-4">
+    <a href="javascript:{document.getElementById('upvote{{ product.id }}').submit()}"><button
+        class="btn btn-primary btn-lg btn-block"><span class="oi oi-caret-top"></span> Upvote
+        {{ product.votes_total }}</button></a>
+  </div>
+</div>
+
+<form id="upvote{{ product.id }}" method="POST" action="{% url 'upvote' product.id %}">
+  {% csrf_token%}
+  <input type="hidden">
+</form>
+{% endfor %}
+
+{% elif notfound %}
+
+<div class="row pt-3">
+  <!-- you can do a lot more here  -->
+  <h1> Learn the spelling of mobile name before buying mobile </h1>
+  <span style='font-size:100px;'>&#128514;</span>
+</div>
+
+
+
+{% else %}
+
+{% for product in products.all %}
+<div class="row pt-3">
+  <div class="col-2" onclick="window.location='{% url 'detail' product.id %}';" style="cursor: pointer;">
+    <img src="{{ product.icon.url }}" class="img-fluid" />
+  </div>
+  <div class="col-6" onclick="window.location='{% url 'detail' product.id %}';" style="cursor: pointer;">
+    <h1>{{ product.title }}</h1>
+  </div>
+  <div class="col-4">
+    <a href="javascript:{document.getElementById('upvote{{ product.id }}').submit()}"><button
+        class="btn btn-primary btn-lg btn-block"><span class="oi oi-caret-top"></span> Upvote
+        {{ product.votes_total }}</button></a>
+  </div>
+</div>
+
+<form id="upvote{{ product.id }}" method="POST" action="{% url 'upvote' product.id %}">
+  {% csrf_token%}
+  <input type="hidden">
+</form>
+{% endfor %}
+
+
+{% endif %}
+{% endblock %}
